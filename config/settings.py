@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g2)iug2y2-bz1-u(czst5v!&jibd&v!7c4#sytnrl$6^pb9r)-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['backend-investtrack.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
