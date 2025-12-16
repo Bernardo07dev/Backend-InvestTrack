@@ -73,7 +73,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://invest-track-sigma.vercel.app/",
+    "https://invest-track-sigma.vercel.app",
     "http://localhost:3000",
 ]
 DATABASES = {
