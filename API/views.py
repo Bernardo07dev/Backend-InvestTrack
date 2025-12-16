@@ -21,5 +21,4 @@ def get_user(request, user_id):
         return HttpResponse("Usuário não encontrado")
     
 def delete_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
+    return HttpResponse("Usuário deletado")
