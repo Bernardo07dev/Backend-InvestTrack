@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
     "https://invest-track-sigma.vercel.app",
-    "http://localhost:3000",
+    "http://localhost:5173",
 ]
 DATABASES = {
     'default': {
