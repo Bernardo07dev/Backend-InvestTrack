@@ -16,7 +16,7 @@ def get_user(request, user_id):
     except:
         return HttpResponse("Usuário não encontrado")
 
-@api_view(['POST']) 
+@api_view(['GET', 'DELETE', 'POST']) 
 def verify(request):
     email = request.data.get('email')
     senha = request.data.get('senha')
@@ -27,7 +27,7 @@ def verify(request):
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['POST'])   
+@api_view(['GET', 'DELETE', 'POST'])  
 def create_user(request):
     serializer = UserSerializer(data=request.data)  
     if serializer.is_valid():
