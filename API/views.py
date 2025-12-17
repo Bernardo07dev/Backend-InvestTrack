@@ -24,8 +24,8 @@ def verify(request):
         user = User.objects.get(email=email, senha=senha)
         serializer = UserSerializer(user)
         return Response(serializer.data)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"erro_detalhado": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'DELETE', 'POST'])  
 def create_user(request):
