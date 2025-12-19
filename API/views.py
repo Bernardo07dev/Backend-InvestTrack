@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .models import User
+from .models import User, Investimentos
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -44,3 +44,11 @@ def create_investimento(request):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])    
+def get_investimentos(request):
+    user_id = request.data.get('user')
+
+    investimentos = Investimentos.objects.filter(user=user_id)
+    serializer = InvestimentoSerializer(investimentos, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
