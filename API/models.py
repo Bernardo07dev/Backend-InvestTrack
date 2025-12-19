@@ -7,3 +7,14 @@ class User(models.Model):
 
     def __str__(self):
         return self.nome
+    
+class Investimentos(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stock = models.CharField(max_length=100)
+    ticker = models.CharField(max_length=50)
+    quantidade = models.IntegerField()
+    data = models.DateField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.stock

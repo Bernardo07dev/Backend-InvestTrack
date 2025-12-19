@@ -3,7 +3,7 @@ from .models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer
+from .serializers import UserSerializer, InvestimentoSerializer
 
 @api_view(['GET', 'DELETE', 'POST']) 
 def get_user(request, user_id):
@@ -34,4 +34,13 @@ def create_user(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)   
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST']) 
+def create_investimento(request):
+    serializer = InvestimentoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
