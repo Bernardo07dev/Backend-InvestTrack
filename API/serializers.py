@@ -9,4 +9,4 @@ class UserSerializer(serializers.ModelSerializer):
 class InvestimentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Investimentos
-        fields = ['id', 'user', 'stock', 'ticker', 'quantidade', 'data', 'price', 'total']
+        fields = ['id', 'user', 'stock', 'ticker', 'quantidade', 'data', 'price', 'total','img']

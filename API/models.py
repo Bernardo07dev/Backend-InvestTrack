@@ -16,6 +16,7 @@ class Investimentos(models.Model):
     data = models.DateField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    img = models.CharField(max_length=500)
 
     def __str__(self):
         return self.stock
