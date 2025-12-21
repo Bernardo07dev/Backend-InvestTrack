@@ -69,10 +69,12 @@ def create_transaction(request):
 
         if tipo == 'adicionar':
             carteira.saldo += valor
+            carteira.save()
         elif tipo == 'subtrair':
             carteira.saldo -= valor
             carteira.investido += valor
-
+            carteira.save()
+                
         Transacao.objects.create(
             carteira=carteira,
             transaction=valor,
@@ -90,3 +92,16 @@ def create_transaction(request):
             {'erro': 'Carteira não encontrada'},
             status=status.HTTP_404_NOT_FOUND
         )
+
+
+@api_view(['POST'])
+def get_carteira(request):
+    user = request.data.get('user')
+    try:
+        carteira = Carteira.objects.get(user=user)
+        serializer = CarteiraSerializer(carteira)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Carteira.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except:
+        return HttpResponse("Carteira não encontrada")
