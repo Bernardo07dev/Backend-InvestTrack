@@ -65,8 +65,7 @@ def create_transaction(request):
     user = request.data.get('user')
     try:
         carteira = Carteira.objects.get(user=user)
-        valor = request.data.get('valor')
-        # valor = Decimal(request.data.get('valor'))
+        valor = Decimal(str(request.data.get('valor')))
         tipo = request.data.get('tipo')
 
         if tipo == 'adicionar':
@@ -93,6 +92,11 @@ def create_transaction(request):
         return Response(
             {'erro': 'Carteira não encontrada'},
             status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'erro': str(e)},
+            status=400
         )
 
 
