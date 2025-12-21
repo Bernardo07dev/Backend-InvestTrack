@@ -6,6 +6,7 @@ from rest_framework import status
 from .serializers import UserSerializer, InvestimentoSerializer, CarteiraSerializer, TransacaoSerializer
 from .models import Carteira, Transacao
 from django.utils import timezone
+from decimal import Decimal
 
 @api_view(['GET', 'DELETE', 'POST']) 
 def get_user(request, user_id):
@@ -65,6 +66,7 @@ def create_transaction(request):
     try:
         carteira = Carteira.objects.get(user=user)
         valor = request.data.get('valor')
+        # valor = Decimal(request.data.get('valor'))
         tipo = request.data.get('tipo')
 
         if tipo == 'adicionar':
