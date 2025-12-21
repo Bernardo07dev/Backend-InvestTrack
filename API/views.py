@@ -3,7 +3,9 @@ from .models import User, Investimentos
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, InvestimentoSerializer
+from .serializers import UserSerializer, InvestimentoSerializer, CarteiraSerializer, TransacaoSerializer
+from .models import Carteira, Transacao
+from django.utils import timezone
 
 @api_view(['GET', 'DELETE', 'POST']) 
 def get_user(request, user_id):
@@ -29,11 +31,15 @@ def verify(request):
 
 @api_view(['GET', 'DELETE', 'POST'])  
 def create_user(request):
-    serializer = UserSerializer(data=request.data)  
+    serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)   
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user = serializer.save()
+        Carteira.objects.create(
+            user=user
+        )
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
 
 @api_view(['POST']) 
 def create_investimento(request):
@@ -52,3 +58,35 @@ def get_investimentos(request):
     serializer = InvestimentoSerializer(investimentos, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def create_transaction(request):
+    user = request.user
+    try:
+        carteira = Carteira.objects.get(user=user)
+        valor = request.data.get('valor')
+        tipo = request.data.get('tipo')
+
+        if tipo == 'adicionar':
+            carteira.saldo += valor
+        elif tipo == 'subtrair':
+            carteira.saldo -= valor
+            carteira.investido += valor
+
+        Transacao.objects.create(
+            carteira=carteira,
+            transaction=valor,
+            tipo=tipo,
+            data=timezone.now()
+        )
+
+        return Response(
+            {'mensagem': 'Transação realizada com sucesso'},
+            status=status.HTTP_201_CREATED
+        )
+    
+    except Carteira.DoesNotExist:
+        return Response(
+            {'erro': 'Carteira não encontrada'},
+            status=status.HTTP_404_NOT_FOUND
+        )
