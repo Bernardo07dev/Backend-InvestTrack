@@ -61,7 +61,7 @@ def get_investimentos(request):
 
 @api_view(['POST'])
 def create_transaction(request):
-    user = request.user
+    user = request.data.get('user')
     try:
         carteira = Carteira.objects.get(user=user)
         valor = request.data.get('valor')
