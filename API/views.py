@@ -1,10 +1,11 @@
 from django.http import HttpResponse
-from .models import User, Investimentos
+from pyexpat.errors import messages
+
+from .models import User, Investimentos, Carteira, Transacao
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, InvestimentoSerializer, CarteiraSerializer, TransacaoSerializer
-from .models import Carteira, Transacao
+from .serializers import UserSerializer, InvestimentoSerializer, CarteiraSerializer
 from django.utils import timezone
 from decimal import Decimal
 
@@ -111,3 +112,16 @@ def get_carteira(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
     except:
         return HttpResponse("Carteira não encontrada")
+
+@api_view(['DELETE'])
+def delete_invest(request):
+    user = request.data.get('user')
+    stock = request.data.get('stock')
+    try:
+        investimento = Investimentos.objects.get(user=user, ticker=stock)
+        investimento.delete()
+        return Response({'message': 'Deletado com sucesso'},status=status.HTTP_200_OK)
+    except Investimentos.DoesNotExist():
+        return  Response({'message':'Investimento não existe'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': e}, status=status.HTTP_400_BAD_REQUEST)
