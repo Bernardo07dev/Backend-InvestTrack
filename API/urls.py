@@ -9,5 +9,6 @@ urlpatterns = [
     path('get-investimentos/', views.get_investimentos),
     path('transaction/', views.create_transaction),
     path('carteira/', views.get_carteira),
-    path('delete_invest/', views.delete_invest)
+    path('delete_invest/', views.delete_invest),
+    path('diminui_invest/', views.diminui_invest)
 ]

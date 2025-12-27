@@ -1,3 +1,4 @@
+from django.core.management.commands.makemessages import STATUS_OK
 from django.http import HttpResponse
 from pyexpat.errors import messages
 
@@ -121,7 +122,26 @@ def delete_invest(request):
         investimento = Investimentos.objects.get(user=user, ticker=stock)
         investimento.delete()
         return Response({'message': 'Deletado com sucesso'},status=status.HTTP_200_OK)
-    except Investimentos.DoesNotExist():
+    except Investimentos.DoesNotExist:
         return  Response({'message':'Investimento não existe'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'message': e}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def diminui_invest(request):
+    id_carteira = request.data.get('carteira')
+    valor = Decimal(str(request.data.get('valor')))
+    tipo = request.data.get('tipo')
+    try:
+        carteira = Carteira.objects.get(id=id_carteira)
+        if tipo == 'add':
+            carteira.investido += valor
+            carteira.save()
+        else:
+            carteira.investido -= valor
+            carteira.save()
+        return Response(status=status.HTTP_200_OK)
+    except Carteira.DoesNotExist:
+        return Response({'message':'Carteira inexistente'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
