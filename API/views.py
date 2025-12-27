@@ -129,11 +129,11 @@ def delete_invest(request):
 
 @api_view(['POST'])
 def diminui_invest(request):
-    id_carteira = request.data.get('carteira')
+    id_user = request.data.get('id')
     valor = Decimal(str(request.data.get('valor')))
     tipo = request.data.get('tipo')
     try:
-        carteira = Carteira.objects.get(id=id_carteira)
+        carteira = Carteira.objects.get(user=id_user)
         if tipo == 'add':
             carteira.investido += valor
             carteira.save()
