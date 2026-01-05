@@ -34,14 +34,19 @@ def verify(request):
 
 @api_view(['GET', 'DELETE', 'POST'])  
 def create_user(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        user = serializer.save()
-        Carteira.objects.create(
-            user=user
+    try:
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = User(
+            username=serializer.validated_data['username'],
+            email=serializer.validated_data['email'],
         )
+        user.set_password(request.data.get('password'))
+        user.save()
+        Carteira.objects.create(user=user)
         return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    except Exception as e:
+        return Response({"erro": str(e)}, status=500)
 
 
 @api_view(['POST']) 

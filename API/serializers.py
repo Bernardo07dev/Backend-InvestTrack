@@ -5,7 +5,7 @@ from .models import User, Investimentos, Carteira, Transacao
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'nome', 'email', 'senha']
+        fields = ['id', 'username', 'email']
 
 class InvestimentoSerializer(serializers.ModelSerializer):
     class Meta:
