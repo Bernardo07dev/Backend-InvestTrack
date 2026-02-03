@@ -16,6 +16,7 @@ class Investimentos(models.Model):
 
     def __str__(self):
         return self.stock
+
 class Carteira(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     investido = models.DecimalField(max_digits=10, decimal_places=2, default=0)

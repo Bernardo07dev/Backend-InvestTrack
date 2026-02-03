@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.core.management.commands.makemessages import STATUS_OK
 from django.http import HttpResponse
 from pyexpat.errors import messages
@@ -21,16 +22,22 @@ def get_user(request, user_id):
     except:
         return HttpResponse("Usuário não encontrado")
 
-@api_view(['GET', 'DELETE', 'POST']) 
+@api_view(['POST'])
 def verify(request):
     email = request.data.get('email')
     senha = request.data.get('senha')
+
     try:
-        user = User.objects.get(email=email, senha=senha)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    except Exception as e:
-        return Response({"erro_detalhado": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(email=email)
+
+        if user.check_password(senha):
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"erro": "Senha incorreta"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    except User.DoesNotExist:
+        return Response({"erro": "Email não cadastrado"}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET', 'DELETE', 'POST'])  
 def create_user(request):
