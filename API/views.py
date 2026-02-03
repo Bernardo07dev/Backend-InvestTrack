@@ -39,21 +39,27 @@ def verify(request):
     except User.DoesNotExist:
         return Response({"erro": "Email não cadastrado"}, status=status.HTTP_401_UNAUTHORIZED)
 
-@api_view(['GET', 'DELETE', 'POST'])  
+@api_view(['GET', 'DELETE', 'POST'])
 def create_user(request):
     try:
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         user = User(
             username=serializer.validated_data['username'],
             email=serializer.validated_data['email'],
         )
         user.set_password(request.data.get('password'))
         user.save()
+
         Carteira.objects.create(user=user)
-        return Response(serializer.data, status=201)
+
+        output_serializer = UserSerializer(user)
+
+        return Response(output_serializer.data, status=201)
+
     except Exception as e:
-        return Response({"erro": str(e)}, status=500)
+        return Response({"erro": str(e)}, status=400)
 
 
 @api_view(['POST']) 
